@@ -25,7 +25,7 @@ endif(MSVC)
 
 # information about libharu
 set(LIBHPDF_MAJOR 2)
-set(LIBHPDF_MINOR 2)
+set(LIBHPDF_MINOR 4)
 set(LIBHPDF_PATCH 0)
 set(LIBHPDF_VERSION ${LIBHPDF_MAJOR}.${LIBHPDF_MINOR}.${LIBHPDF_PATCH})
 set(LIBHPDF_DESCRIPTION "libHaru is a free, cross platform, open source library for generating PDF files.")
