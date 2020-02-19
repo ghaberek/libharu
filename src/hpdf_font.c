@@ -51,6 +51,16 @@ HPDF_Font_TextWidth  (HPDF_Font        font,
 }
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Font_TextWidth2 (HPDF_Font        font,
+                      const HPDF_BYTE  *text,
+                      HPDF_UINT        len,
+                      HPDF_TextWidth  *text_width)
+{
+    *text_width = HPDF_Font_TextWidth(font, text, len);
+    return HPDF_OK;
+}
+
 HPDF_EXPORT(HPDF_UINT)
 HPDF_Font_MeasureText (HPDF_Font          font,
                        const HPDF_BYTE   *text,
@@ -169,6 +179,14 @@ HPDF_Font_GetBBox  (HPDF_Font  font)
         return ((HPDF_FontAttr)font->attr)->fontdef->font_bbox;
 
     return bbox;
+}
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Font_GetBBox2  (HPDF_Font  font,
+                     HPDF_Box  *box)
+{
+    *box = HPDF_Font_GetBBox(font);
+    return HPDF_OK;
 }
 
 HPDF_EXPORT(HPDF_INT)

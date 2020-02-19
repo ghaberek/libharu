@@ -1081,6 +1081,15 @@ HPDF_Page_GetTransMatrix  (HPDF_Page   page)
 }
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetTransMatrix2  (HPDF_Page   page,
+                            HPDF_TransMatrix *matrix)
+{
+    *matrix = HPDF_Page_GetTransMatrix(page);
+    return HPDF_OK;
+}
+
+
 HPDF_EXPORT(HPDF_REAL)
 HPDF_Page_GetLineWidth  (HPDF_Page   page)
 {
@@ -1151,6 +1160,15 @@ HPDF_Page_GetDash  (HPDF_Page   page)
     }
 
     return mode;
+}
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetDash2  (HPDF_Page   page,
+                     HPDF_DashMode *dashmode)
+{
+    *dashmode = HPDF_Page_GetDash(page);
+    return HPDF_OK;
 }
 
 
@@ -1275,6 +1293,13 @@ HPDF_Page_GetRGBFill  (HPDF_Page   page)
     return DEF_RGB_COLOR;
 }
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetRGBFill2  (HPDF_Page      page,
+                        HPDF_RGBColor *color)
+{
+    *color = HPDF_Page_GetRGBFill(page);
+    return HPDF_OK;
+}
 
 HPDF_EXPORT(HPDF_RGBColor)
 HPDF_Page_GetRGBStroke  (HPDF_Page   page)
@@ -1292,6 +1317,16 @@ HPDF_Page_GetRGBStroke  (HPDF_Page   page)
 
     return DEF_RGB_COLOR;
 }
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetRGBStroke2  (HPDF_Page   page,
+                          HPDF_RGBColor *color)
+{
+    *color = HPDF_Page_GetRGBStroke(page);
+    return HPDF_OK;
+}
+
 
 HPDF_EXPORT(HPDF_CMYKColor)
 HPDF_Page_GetCMYKFill  (HPDF_Page   page)
@@ -1311,6 +1346,15 @@ HPDF_Page_GetCMYKFill  (HPDF_Page   page)
 }
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetCMYKFill2  (HPDF_Page   page,
+                         HPDF_CMYKColor *color)
+{
+    *color = HPDF_Page_GetCMYKFill(page);
+    return HPDF_OK;
+}
+
+
 HPDF_EXPORT(HPDF_CMYKColor)
 HPDF_Page_GetCMYKStroke  (HPDF_Page   page)
 {
@@ -1326,6 +1370,14 @@ HPDF_Page_GetCMYKStroke  (HPDF_Page   page)
     }
 
     return DEF_CMYK_COLOR;
+}
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetCMYKStroke2  (HPDF_Page   page,
+                           HPDF_CMYKColor *color)
+{
+    *color = HPDF_Page_GetCMYKStroke(page);
+    return HPDF_OK;
 }
 
 
@@ -1397,6 +1449,15 @@ HPDF_Page_GetTextMatrix  (HPDF_Page   page)
         return attr->text_matrix;
     } else
         return DEF_MATRIX;
+}
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetTextMatrix2  (HPDF_Page   page,
+                           HPDF_TransMatrix *matrix)
+{
+    *matrix = HPDF_Page_GetTextMatrix(page);
+    return HPDF_OK;
 }
 
 
@@ -2062,7 +2123,7 @@ HPDF_Page_Create3DView    (HPDF_Page       page,
     return view;
 }
 
-HPDF_Annotation
+HPDF_EXPORT(HPDF_Annotation)
 HPDF_Page_CreateTextMarkupAnnot (HPDF_Page     page,
                                 HPDF_Rect      rect,
                                 const char     *text,

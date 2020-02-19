@@ -517,7 +517,7 @@ HPDF_Page_CreateURILinkAnnot  (HPDF_Page     page,
                                const char   *uri);
 
 
-HPDF_Annotation
+HPDF_EXPORT(HPDF_Annotation)
 HPDF_Page_CreateTextMarkupAnnot (HPDF_Page     page,
 								HPDF_Rect      rect,
 								const char     *text,
@@ -940,6 +940,11 @@ HPDF_EXPORT(HPDF_Box)
 HPDF_Font_GetBBox  (HPDF_Font    font);
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Font_GetBBox2  (HPDF_Font    font,
+                     HPDF_Box    *box);
+
+
 HPDF_EXPORT(HPDF_INT)
 HPDF_Font_GetAscent  (HPDF_Font  font);
 
@@ -960,6 +965,13 @@ HPDF_EXPORT(HPDF_TextWidth)
 HPDF_Font_TextWidth  (HPDF_Font          font,
                       const HPDF_BYTE   *text,
                       HPDF_UINT          len);
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Font_TextWidth2 (HPDF_Font          font,
+                      const HPDF_BYTE   *text,
+                      HPDF_UINT          len,
+                      HPDF_TextWidth    *text_width);
 
 
 HPDF_EXPORT(HPDF_UINT)
@@ -1063,6 +1075,11 @@ HPDF_EXPORT(HPDF_TransMatrix)
 HPDF_Page_GetTransMatrix  (HPDF_Page   page);
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetTransMatrix2  (HPDF_Page         page,
+                            HPDF_TransMatrix *matrix);
+
+
 HPDF_EXPORT(HPDF_REAL)
 HPDF_Page_GetLineWidth  (HPDF_Page   page);
 
@@ -1081,6 +1098,11 @@ HPDF_Page_GetMiterLimit  (HPDF_Page   page);
 
 HPDF_EXPORT(HPDF_DashMode)
 HPDF_Page_GetDash  (HPDF_Page   page);
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetDash2  (HPDF_Page   page,
+                     HPDF_DashMode *dashmode);
 
 
 HPDF_EXPORT(HPDF_REAL)
@@ -1120,16 +1142,36 @@ HPDF_EXPORT(HPDF_RGBColor)
 HPDF_Page_GetRGBFill  (HPDF_Page   page);
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetRGBFill2  (HPDF_Page      page,
+                        HPDF_RGBColor *color);
+
+
 HPDF_EXPORT(HPDF_RGBColor)
 HPDF_Page_GetRGBStroke  (HPDF_Page   page);
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetRGBStroke2  (HPDF_Page   page,
+                          HPDF_RGBColor *color);
 
 
 HPDF_EXPORT(HPDF_CMYKColor)
 HPDF_Page_GetCMYKFill  (HPDF_Page   page);
 
 
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetCMYKFill2  (HPDF_Page   page,
+                         HPDF_CMYKColor *color);
+
+
 HPDF_EXPORT(HPDF_CMYKColor)
 HPDF_Page_GetCMYKStroke  (HPDF_Page   page);
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetCMYKStroke2  (HPDF_Page   page,
+                           HPDF_CMYKColor *color);
 
 
 HPDF_EXPORT(HPDF_REAL)
@@ -1150,6 +1192,11 @@ HPDF_Page_GetFillingColorSpace (HPDF_Page   page);
 
 HPDF_EXPORT(HPDF_TransMatrix)
 HPDF_Page_GetTextMatrix  (HPDF_Page   page);
+
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_GetTextMatrix2  (HPDF_Page   page,
+                           HPDF_TransMatrix *matrix);
 
 
 HPDF_EXPORT(HPDF_UINT)
