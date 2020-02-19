@@ -3,6 +3,7 @@ Makefile.in
 acconfig.h
 aclocal.m4
 autom4te.cache
+build
 buildmk.stamp
 config.h.in
 config.cache
