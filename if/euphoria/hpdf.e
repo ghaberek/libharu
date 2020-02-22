@@ -17,6 +17,7 @@ $
 
 constant
 	HPDF_PBYTE  = C_POINTER,
+	HPDF_PRECT  = C_POINTER,
 $
 
 constant
@@ -65,6 +66,20 @@ function peek_float32( object addr_n_length )
 	
 	return data
 end function
+
+procedure poke_float32( atom ptr, object x )
+	
+	if atom( x ) then
+		poke( ptr, atom_to_float32(x) )
+		return
+	end if
+	
+	for i = 1 to length( x ) do
+		poke( ptr, atom_to_float32(x[i]) )
+		ptr += sizeof( C_FLOAT )
+	end for
+	
+end procedure
 
 ifdef DEBUG then
 	
@@ -178,27 +193,46 @@ constant
 	xHPDF_UseCNTEncodings                       = define_c_func( libhpdf, "HPDF_UseCNTEncodings", {HPDF_DOC}, HPDF_STATUS ),
 	xHPDF_UseUTFEncodings                       = define_c_func( libhpdf, "HPDF_UseUTFEncodings", {HPDF_DOC}, HPDF_STATUS ),
 	-- XObject ---------------------------------
-	xHPDF_Page_CreateXObjectFromImage           = define_c_func( libhpdf, "HPDF_Page_CreateXObjectFromImage", {HPDF_DOC,HPDF_PAGE} & HPDF_RECT & {HPDF_IMAGE,HPDF_BOOL}, HPDF_XOBJECT ),
-	xHPDF_Page_CreateXObjectAsWhiteRect         = define_c_func( libhpdf, "HPDF_Page_CreateXObjectAsWhiteRect", {HPDF_DOC,HPDF_PAGE} & HPDF_RECT, HPDF_XOBJECT ),
+--	xHPDF_Page_CreateXObjectFromImage           = define_c_func( libhpdf, "HPDF_Page_CreateXObjectFromImage", {HPDF_DOC,HPDF_PAGE} & HPDF_RECT & {HPDF_IMAGE,HPDF_BOOL}, HPDF_XOBJECT ),
+	xHPDF_Page_CreateXObjectFromImage2          = define_c_func( libhpdf, "HPDF_Page_CreateXObjectFromImage2", {HPDF_DOC,HPDF_PAGE,HPDF_PRECT,HPDF_IMAGE,HPDF_BOOL}, HPDF_XOBJECT ),
+--	xHPDF_Page_CreateXObjectAsWhiteRect         = define_c_func( libhpdf, "HPDF_Page_CreateXObjectAsWhiteRect", {HPDF_DOC,HPDF_PAGE} & HPDF_RECT, HPDF_XOBJECT ),
+	xHPDF_Page_CreateXObjectAsWhiteRect2        = define_c_func( libhpdf, "HPDF_Page_CreateXObjectAsWhiteRect2", {HPDF_DOC,HPDF_PAGE,HPDF_PRECT}, HPDF_XOBJECT ),
 	-- annotation ------------------------------
-	xHPDF_Page_Create3DAnnot                    = define_c_func( libhpdf, "HPDF_Page_Create3DAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_BOOL,HPDF_BOOL,HPDF_U3D,HPDF_IMAGE}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateTextAnnot                  = define_c_func( libhpdf, "HPDF_Page_CreateTextAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateFreeTextAnnot              = define_c_func( libhpdf, "HPDF_Page_CreateFreeTextAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_Create3DAnnot                    = define_c_func( libhpdf, "HPDF_Page_Create3DAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_BOOL,HPDF_BOOL,HPDF_U3D,HPDF_IMAGE}, HPDF_ANNOTATION ),
+	xHPDF_Page_Create3DAnnot2                   = define_c_func( libhpdf, "HPDF_Page_Create3DAnnot2", {HPDF_PAGE,HPDF_PRECT,HPDF_BOOL,HPDF_BOOL,HPDF_U3D,HPDF_IMAGE}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateTextAnnot                  = define_c_func( libhpdf, "HPDF_Page_CreateTextAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateTextAnnot2                 = define_c_func( libhpdf, "HPDF_Page_CreateTextAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateFreeTextAnnot              = define_c_func( libhpdf, "HPDF_Page_CreateFreeTextAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateFreeTextAnnot2             = define_c_func( libhpdf, "HPDF_Page_CreateFreeTextAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
 	xHPDF_Page_CreateLineAnnot                  = define_c_func( libhpdf, "HPDF_Page_CreateLineAnnot", {HPDF_PAGE,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint = define_c_func( libhpdf, "HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint", {HPDF_DOC,HPDF_PAGE} & HPDF_RECT, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateWidgetAnnot                = define_c_func( libhpdf, "HPDF_Page_CreateWidgetAnnot", {HPDF_PAGE} & HPDF_RECT, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateLinkAnnot                  = define_c_func( libhpdf, "HPDF_Page_CreateLinkAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_DESTINATION}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateURILinkAnnot               = define_c_func( libhpdf, "HPDF_Page_CreateURILinkAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateTextMarkupAnnot            = define_c_func( libhpdf, "HPDF_Page_CreateTextMarkupAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER,HPDF_ANNOTTYPE}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateHighlightAnnot             = define_c_func( libhpdf, "HPDF_Page_CreateHighlightAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateUnderlineAnnot             = define_c_func( libhpdf, "HPDF_Page_CreateUnderlineAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateSquigglyAnnot              = define_c_func( libhpdf, "HPDF_Page_CreateSquigglyAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateStrikeOutAnnot             = define_c_func( libhpdf, "HPDF_Page_CreateStrikeOutAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreatePopupAnnot                 = define_c_func( libhpdf, "HPDF_Page_CreatePopupAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_ANNOTATION}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateStampAnnot                 = define_c_func( libhpdf, "HPDF_Page_CreateStampAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_STAMPANNOTNAME,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateProjectionAnnot            = define_c_func( libhpdf, "HPDF_Page_CreateProjectionAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateSquareAnnot                = define_c_func( libhpdf, "HPDF_Page_CreateSquareAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
-	xHPDF_Page_CreateCircleAnnot                = define_c_func( libhpdf, "HPDF_Page_CreateCircleAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint = define_c_func( libhpdf, "HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint", {HPDF_DOC,HPDF_PAGE} & HPDF_RECT, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint2 = define_c_func( libhpdf, "HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint2", {HPDF_DOC,HPDF_PAGE,HPDF_PRECT}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateWidgetAnnot                = define_c_func( libhpdf, "HPDF_Page_CreateWidgetAnnot", {HPDF_PAGE} & HPDF_RECT, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateWidgetAnnot2               = define_c_func( libhpdf, "HPDF_Page_CreateWidgetAnnot2", {HPDF_PAGE,HPDF_PRECT}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateLinkAnnot                  = define_c_func( libhpdf, "HPDF_Page_CreateLinkAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_DESTINATION}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateLinkAnnot2                 = define_c_func( libhpdf, "HPDF_Page_CreateLinkAnnot2", {HPDF_PAGE,HPDF_PRECT,HPDF_DESTINATION}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateURILinkAnnot               = define_c_func( libhpdf, "HPDF_Page_CreateURILinkAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateURILinkAnnot2              = define_c_func( libhpdf, "HPDF_Page_CreateURILinkAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateTextMarkupAnnot            = define_c_func( libhpdf, "HPDF_Page_CreateTextMarkupAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER,HPDF_ANNOTTYPE}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateTextMarkupAnnot2           = define_c_func( libhpdf, "HPDF_Page_CreateTextMarkupAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER,HPDF_ANNOTTYPE}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateHighlightAnnot             = define_c_func( libhpdf, "HPDF_Page_CreateHighlightAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateHighlightAnnot2            = define_c_func( libhpdf, "HPDF_Page_CreateHighlightAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateUnderlineAnnot             = define_c_func( libhpdf, "HPDF_Page_CreateUnderlineAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateUnderlineAnnot2            = define_c_func( libhpdf, "HPDF_Page_CreateUnderlineAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateSquigglyAnnot              = define_c_func( libhpdf, "HPDF_Page_CreateSquigglyAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateSquigglyAnnot2             = define_c_func( libhpdf, "HPDF_Page_CreateSquigglyAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateStrikeOutAnnot             = define_c_func( libhpdf, "HPDF_Page_CreateStrikeOutAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateStrikeOutAnnot2            = define_c_func( libhpdf, "HPDF_Page_CreateStrikeOutAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreatePopupAnnot                 = define_c_func( libhpdf, "HPDF_Page_CreatePopupAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_ANNOTATION}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreatePopupAnnot2                = define_c_func( libhpdf, "HPDF_Page_CreatePopupAnnot2", {HPDF_PAGE,HPDF_PRECT,HPDF_ANNOTATION}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateStampAnnot                 = define_c_func( libhpdf, "HPDF_Page_CreateStampAnnot", {HPDF_PAGE} & HPDF_RECT & {HPDF_STAMPANNOTNAME,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateStampAnnot2                = define_c_func( libhpdf, "HPDF_Page_CreateStampAnnot2", {HPDF_PAGE,HPDF_PRECT,HPDF_STAMPANNOTNAME,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateProjectionAnnot            = define_c_func( libhpdf, "HPDF_Page_CreateProjectionAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateProjectionAnnot2           = define_c_func( libhpdf, "HPDF_Page_CreateProjectionAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateSquareAnnot                = define_c_func( libhpdf, "HPDF_Page_CreateSquareAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateSquareAnnot2               = define_c_func( libhpdf, "HPDF_Page_CreateSquareAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+--	xHPDF_Page_CreateCircleAnnot                = define_c_func( libhpdf, "HPDF_Page_CreateCircleAnnot", {HPDF_PAGE} & HPDF_RECT & {C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
+	xHPDF_Page_CreateCircleAnnot2               = define_c_func( libhpdf, "HPDF_Page_CreateCircleAnnot2", {HPDF_PAGE,HPDF_PRECT,C_STRING,HPDF_ENCODER}, HPDF_ANNOTATION ),
 	xHPDF_LinkAnnot_SetHighlightMode            = define_c_func( libhpdf, "HPDF_LinkAnnot_SetHighlightMode", {HPDF_ANNOTATION,HPDF_ANNOTHIGHLIGHTMODE}, HPDF_STATUS ),
 	xHPDF_LinkAnnot_SetJavaScript               = define_c_func( libhpdf, "HPDF_LinkAnnot_SetJavaScript", {HPDF_ANNOTATION,HPDF_JAVASCRIPT}, HPDF_STATUS ),
 	xHPDF_LinkAnnot_SetBorderStyle              = define_c_func( libhpdf, "HPDF_LinkAnnot_SetBorderStyle", {HPDF_ANNOTATION,HPDF_REAL,HPDF_UINT16,HPDF_UINT16}, HPDF_STATUS ),
@@ -688,7 +722,7 @@ public function HPDF_GetFont( HPDF_Doc pdf, sequence file_name, object encoding_
 end function
 
 public function HPDF_LoadType1FontFromFile( HPDF_Doc pdf, sequence afm_file_name, sequence data_file_name )
-	return c_func( xHPDF_LoadType1FontFromFile, {pdf,_(afm_file_name),_(data_file_name)} )
+	return peek_string( c_func(xHPDF_LoadType1FontFromFile, {pdf,_(afm_file_name),_(data_file_name)}) )
 end function
 
 public function HPDF_GetTTFontDefFromFile( HPDF_Doc pdf, sequence file_name, integer embedding )
@@ -696,11 +730,11 @@ public function HPDF_GetTTFontDefFromFile( HPDF_Doc pdf, sequence file_name, int
 end function
 
 public function HPDF_LoadTTFontFromFile( HPDF_Doc pdf, sequence file_name, integer embedding )
-	return c_func( xHPDF_LoadTTFontFromFile, {pdf,_(file_name),embedding} )
+	return peek_string( c_func(xHPDF_LoadTTFontFromFile, {pdf,_(file_name),embedding}) )
 end function
 
 public function HPDF_LoadTTFontFromFile2( HPDF_Doc pdf, sequence file_name, atom index, integer embedding )
-	return c_func( xHPDF_LoadTTFontFromFile2, {pdf,_(file_name),index,embedding} )
+	return peek_string( c_func(xHPDF_LoadTTFontFromFile2, {pdf,_(file_name),index,embedding}) )
 end function
 
 public function HPDF_AddPageLabel( HPDF_Doc pdf, atom page_num, HPDF_PageNumStyle style, atom first_page, sequence prefix )
@@ -832,26 +866,46 @@ end function
 /*----- XObject ------------------------------------------------------------*/
 
 public function HPDF_Page_CreateXObjectFromImage( HPDF_Doc pdf, HPDF_Page page, HPDF_Rect rect, HPDF_Image image, integer zoom )
-	return c_func( xHPDF_Page_CreateXObjectFromImage, {pdf,page} & rect & {image,zoom} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateXObjectFromImage2, {pdf,page,prect,image,zoom} )
 end function
 
 public function HPDF_Page_CreateXObjectAsWhiteRect( HPDF_Doc pdf, HPDF_Page page, HPDF_Rect rect )
-	return c_func( xHPDF_Page_CreateXObjectAsWhiteRect, {pdf,page} & rect )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateXObjectAsWhiteRect2, {pdf,page,prect} )
 end function
 
 /*--------------------------------------------------------------------------*/
 /*----- annotation ---------------------------------------------------------*/
 
 public function HPDF_Page_Create3DAnnot( HPDF_Page page, HPDF_Rect rect, integer tb, integer np, HPDF_U3d u3d, HPDF_Image ap )
-	return c_func( xHPDF_Page_Create3DAnnot, {page} & rect & {tb,np,u3d,ap} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_Create3DAnnot2, {page,prect,tb,np,u3d,ap} )
 end function
 
 public function HPDF_Page_CreateTextAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateTextAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateTextAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateFreeTextAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateFreeTextAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateFreeTextAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateLineAnnot( HPDF_Page page, sequence text, HPDF_Encoder encoder )
@@ -859,59 +913,115 @@ public function HPDF_Page_CreateLineAnnot( HPDF_Page page, sequence text, HPDF_E
 end function
 
 public function HPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint( HPDF_Doc pdf, HPDF_Page page, HPDF_Rect rect )
-	return c_func( xHPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint, {pdf,page} & rect )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateWidgetAnnot_WhiteOnlyWhilePrint2, {pdf,page,prect} )
 end function
 
 public function HPDF_Page_CreateWidgetAnnot( HPDF_Page page, HPDF_Rect rect )
-	return c_func( xHPDF_Page_CreateWidgetAnnot, {page} & rect )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateWidgetAnnot2, {page,prect} )
 end function
 
 public function HPDF_Page_CreateLinkAnnot( HPDF_Page page, HPDF_Rect rect, HPDF_Destination dst )
-	return c_func( xHPDF_Page_CreateLinkAnnot, {page} & rect & {dst} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateLinkAnnot2, {page,prect,dst} )
 end function
 
 public function HPDF_Page_CreateURILinkAnnot( HPDF_Page page, HPDF_Rect rect, sequence uri )
-	return c_func( xHPDF_Page_CreateURILinkAnnot, {page} & rect & {_(uri)} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateURILinkAnnot2, {page,prect,_(uri)} )
 end function
 
 public function HPDF_Page_CreateTextMarkupAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder, HPDF_AnnotType subType )
-	return c_func( xHPDF_Page_CreateTextMarkupAnnot, {page} & rect & {_(text),encoder,subType} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateTextMarkupAnnot2, {page,prect,_(text),encoder,subType} )
 end function
 
 public function HPDF_Page_CreateHighlightAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateHighlightAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateHighlightAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateUnderlineAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateUnderlineAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateUnderlineAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateSquigglyAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateSquigglyAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateSquigglyAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateStrikeOutAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateStrikeOutAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateStrikeOutAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreatePopupAnnot( HPDF_Page page, HPDF_Rect rect, HPDF_Annotation parent )
-	return c_func( xHPDF_Page_CreatePopupAnnot, {page} & rect & {parent} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreatePopupAnnot2, {page,prect,parent} )
 end function
 
 public function HPDF_Page_CreateStampAnnot( HPDF_Page page, HPDF_Rect rect, HPDF_StampAnnotName name, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateStampAnnot, {page} & rect & {name,_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateStampAnnot2, {page,prect,name,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateProjectionAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateProjectionAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateProjectionAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateSquareAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateSquareAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateSquareAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_Page_CreateCircleAnnot( HPDF_Page page, HPDF_Rect rect, sequence text, HPDF_Encoder encoder )
-	return c_func( xHPDF_Page_CreateCircleAnnot, {page} & rect & {_(text),encoder} )
+	
+	atom prect = allocate_data( SIZEOF_HPDF_RECT, TRUE )
+	poke_float32( prect, rect )
+	
+	return c_func( xHPDF_Page_CreateCircleAnnot2, {page,prect,_(text),encoder} )
 end function
 
 public function HPDF_LinkAnnot_SetHighlightMode( HPDF_Annotation annot, HPDF_AnnotHighlightMode mode )
@@ -1170,14 +1280,7 @@ public function HPDF_Image_AddSMask( HPDF_Image image, HPDF_Image smask )
 	return c_func( xHPDF_Image_AddSMask, {image,smask} )
 end function
 
-/*
--- GetSize returns HPDF_Point which is two floats
 public function HPDF_Image_GetSize( HPDF_Image image )
-	return c_func( xHPDF_Image_GetSize, {image} )
-end function
-*/
-
-public function HPDF_Image_GetSize2( HPDF_Image image )
 	
 	atom size = allocate_data( SIZEOF_HPDF_POINT, TRUE )
 	integer status = c_func( xHPDF_Image_GetSize2, {image,size} )
@@ -1265,14 +1368,7 @@ public function HPDF_Font_GetUnicodeWidth( HPDF_Font font, atom code )
 	return c_func( xHPDF_Font_GetUnicodeWidth, {font,code} )
 end function
 
-/*
--- GetBBox returns HPDF_Box which is four floats
 public function HPDF_Font_GetBBox( HPDF_Font font )
-	return c_func( xHPDF_Font_GetBBox, {font} )
-end function
-*/
-
-public function HPDF_Font_GetBBox2( HPDF_Font font )
 	
 	atom box = allocate_data( SIZEOF_HPDF_BOX, TRUE )
 	integer status = c_func( xHPDF_Font_GetBBox2, {font,box} )
@@ -1300,14 +1396,7 @@ public function HPDF_Font_GetCapHeight( HPDF_Font font )
 	return c_func( xHPDF_Font_GetCapHeight, {font} )
 end function
 
-/*
--- TextWidth returns HPDF_TextWidth which is three unsigned ints
 public function HPDF_Font_TextWidth( HPDF_Font font, sequence text, atom len )
-	return c_func( xHPDF_Font_TextWidth, {font,_(text),len} )
-end function
-*/
-
-public function HPDF_Font_TextWidth2( HPDF_Font font, sequence text, atom len )
 	
 	atom text_width = allocate_data( SIZEOF_HPDF_TEXTWIDTH, TRUE )
 	integer status = c_func( xHPDF_Font_TextWidth2, {font,_(text),len,text_width} )
@@ -1393,14 +1482,7 @@ public function HPDF_Page_GetGMode( HPDF_Page page )
 	return c_func( xHPDF_Page_GetGMode, {page} )
 end function
 
-/*
--- GetCurrentPos returns HPDF_Point which is two floats
 public function HPDF_Page_GetCurrentPos( HPDF_Page page )
-	return c_func( xHPDF_Page_GetCurrentPos, {page} )
-end function
-*/
-
-public function HPDF_Page_GetCurrentPos2( HPDF_Page page )
 	
 	atom pos = allocate_data( SIZEOF_HPDF_POINT, TRUE )
 	integer status = c_func( xHPDF_Page_GetCurrentPos2, {page,pos} )
@@ -1412,14 +1494,7 @@ public function HPDF_Page_GetCurrentPos2( HPDF_Page page )
 	return peek_float32({ pos, length(HPDF_POINT) })
 end function
 
-/*
--- GetCurrentTextPos returns HPDF_Point which is two floats
 public function HPDF_Page_GetCurrentTextPos( HPDF_Page page )
-	return c_func( xHPDF_Page_GetCurrentTextPos, {page} )
-end function
-*/
-
-public function HPDF_Page_GetCurrentTextPos2( HPDF_Page page )
 	
 	atom pos = allocate_data( SIZEOF_HPDF_POINT, TRUE )
 	integer status = c_func( xHPDF_Page_GetCurrentTextPos2, {page,pos} )
@@ -1439,14 +1514,7 @@ public function HPDF_Page_GetCurrentFontSize( HPDF_Page page )
 	return c_func( xHPDF_Page_GetCurrentFontSize, {page} )
 end function
 
-/*
--- GetTransMatrix returns HPDF_TransMatrix which is six floats
 public function HPDF_Page_GetTransMatrix( HPDF_Page page )
-	return c_func( xHPDF_Page_GetTransMatrix, {page} )
-end function
-*/
-
-public function HPDF_Page_GetTransMatrix2( HPDF_Page page )
 	
 	atom matrix = allocate_data( SIZEOF_HPDF_TRANSMATRIX, TRUE )
 	integer status = c_func( xHPDF_Page_GetTransMatrix2, {page,matrix} )
@@ -1474,14 +1542,7 @@ public function HPDF_Page_GetMiterLimit( HPDF_Page page )
 	return c_func( xHPDF_Page_GetMiterLimit, {page} )
 end function
 
-/*
--- GetDash returns HPDF_DashMode which is an array and a couple unsigned ints
 public function HPDF_Page_GetDash( HPDF_Page page )
-	return c_func( xHPDF_Page_GetDash, {page} )
-end function
-*/
-
-public function HPDF_Page_GetDash2( HPDF_Page page )
 	
 	atom dashmode = allocate_data( SIZEOF_HPDF_DASHMODE, TRUE )
 	integer status = c_func( xHPDF_Page_GetDash2, {page,dashmode} )
@@ -1532,14 +1593,7 @@ public function HPDF_Page_GetTextRise( HPDF_Page page )
 	return c_func( xHPDF_Page_GetTextRise, {page} )
 end function
 
-/*
--- GetRGBFill returns HPDF_RGBColor which is three floats
 public function HPDF_Page_GetRGBFill( HPDF_Page page )
-	return c_func( xHPDF_Page_GetRGBFill, {page} )
-end function
-*/
-
-public function HPDF_Page_GetRGBFill2( HPDF_Page page )
 	
 	atom color = allocate_data( SIZEOF_HPDF_RGBCOLOR, TRUE )
 	integer status = c_func( xHPDF_Page_GetRGBFill2, {page,color} )
@@ -1551,14 +1605,7 @@ public function HPDF_Page_GetRGBFill2( HPDF_Page page )
 	return peek_float32({ color, length(HPDF_RGBCOLOR) })
 end function
 
-/*
--- GetRGBStroke returns HPDF_RGBColor which is three floats
 public function HPDF_Page_GetRGBStroke( HPDF_Page page )
-	return c_func( xHPDF_Page_GetRGBStroke, {page} )
-end function
-*/
-
-public function HPDF_Page_GetRGBStroke2( HPDF_Page page )
 	
 	atom color = allocate_data( SIZEOF_HPDF_RGBCOLOR, TRUE )
 	integer status = c_func( xHPDF_Page_GetRGBStroke2, {page,color} )
@@ -1570,14 +1617,7 @@ public function HPDF_Page_GetRGBStroke2( HPDF_Page page )
 	return peek_float32({ color, length(HPDF_RGBCOLOR) })
 end function
 
-/*
--- GetCMYKFill returns HPDF_CMYKColor which is four floats
 public function HPDF_Page_GetCMYKFill( HPDF_Page page )
-	return c_func( xHPDF_Page_GetCMYKFill, {page} )
-end function
-*/
-
-public function HPDF_Page_GetCMYKFill2( HPDF_Page page )
 	
 	atom color = allocate_data( SIZEOF_HPDF_CMYKCOLOR, TRUE )
 	integer status = c_func( xHPDF_Page_GetCMYKFill2, {page,color} )
@@ -1589,14 +1629,7 @@ public function HPDF_Page_GetCMYKFill2( HPDF_Page page )
 	return peek_float32({ color, length(HPDF_CMYKCOLOR) })
 end function
 
-/*
--- GetCMYKStroke returns HPDF_CMYKColor which is four floats
 public function HPDF_Page_GetCMYKStroke( HPDF_Page page )
-	return c_func( xHPDF_Page_GetCMYKStroke, {page} )
-end function
-*/
-
-public function HPDF_Page_GetCMYKStroke2( HPDF_Page page )
 	
 	atom color = allocate_data( SIZEOF_HPDF_CMYKCOLOR, TRUE )
 	integer status = c_func( xHPDF_Page_GetCMYKStroke2, {page,color} )
@@ -1624,14 +1657,7 @@ public function HPDF_Page_GetFillingColorSpace( HPDF_Page page )
 	return c_func( xHPDF_Page_GetFillingColorSpace, {page} )
 end function
 
-/*
--- GetTextMatrix returns HPDF_TransMatrix which is six floats
 public function HPDF_Page_GetTextMatrix( HPDF_Page page )
-	return c_func( xHPDF_Page_GetTextMatrix, {page} )
-end function
-*/
-
-public function HPDF_Page_GetTextMatrix2( HPDF_Page page )
 	
 	atom matrix = allocate_data( SIZEOF_HPDF_TRANSMATRIX, TRUE )
 	integer status = c_func( xHPDF_Page_GetTextMatrix2, {page,matrix} )
@@ -1668,12 +1694,17 @@ public function HPDF_Page_SetMiterLimit( HPDF_Page page, atom miter_limit )
 	return c_func( xHPDF_Page_SetMiterLimit, {page,miter_limit} )
 end function
 
-public function HPDF_Page_SetDash( HPDF_Page page, sequence dash_ptn, atom num_param, atom phase )
+public function HPDF_Page_SetDash( HPDF_Page page, object dash_ptn, atom num_param, atom phase )
 	
-	atom pdash_ptn = allocate_data( sizeof(HPDF_UINT)*num_param, TRUE )
-	poke4( pdash_ptn, dash_ptn )
+	if sequence( dash_ptn ) then
+		
+		atom pdash_ptn = allocate_data( sizeof(HPDF_UINT16)*num_param, TRUE )
+		poke2( pdash_ptn, dash_ptn )
+		dash_ptn = pdash_ptn
+		
+	end if
 	
-	return c_func( xHPDF_Page_SetDash, {page,pdash_ptn,num_param,phase} )
+	return c_func( xHPDF_Page_SetDash, {page,dash_ptn,num_param,phase} )
 end function
 
 public function HPDF_Page_SetFlat( HPDF_Page page, atom flatness )
