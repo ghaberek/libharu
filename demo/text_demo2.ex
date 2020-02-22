@@ -7,7 +7,7 @@ without warning
 include "hpdf.e"
 include "grid_sheet.e"
 
-enum X, Y
+enum X,Y
 enum LEFT, TOP, RIGHT, BOTTOM
 
 function error_handler( atom error_no, atom detail_no, atom user_data )
@@ -25,7 +25,7 @@ integer no = 0
 procedure PrintText( HPDF_Page page )
 	
 	sequence buf
-	HPDF_Point pos = HPDF_Page_GetCurrentTextPos2( page )
+	HPDF_Point pos = HPDF_Page_GetCurrentTextPos( page )
 	
 	no += 1
 	buf = sprintf( ".[%d]%0.2f %0.2f", {no,pos[X],pos[Y]} )
@@ -49,7 +49,8 @@ function main( integer argc, sequence argv )
 	
 	sequence SAMP_TXT = "The quick brown fox jumps over the lazy dog. "
 	
-	fname = argv[1] & ".pdf"
+	fname = argv[1]
+	fname &= ".pdf"
 	
 	pdf = HPDF_New( error_handler_cb, NULL )
 	

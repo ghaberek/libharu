@@ -8,7 +8,6 @@ include "hpdf.e"
 include "grid_sheet.e"
 
 enum R,G,B
-constant NULL = 0
 
 function error_handler( atom error_no, atom detail_no, atom user_data )
 	
@@ -44,7 +43,7 @@ procedure show_description( HPDF_Page page, atom x, atom y, sequence text )
 	
 	atom fsize = HPDF_Page_GetCurrentFontSize( page )
 	HPDF_Font font = HPDF_Page_GetCurrentFont( page )
-	HPDF_RGBColor c = HPDF_Page_GetRGBFill2( page )
+	HPDF_RGBColor c = HPDF_Page_GetRGBFill( page )
 	
 	HPDF_Page_BeginText( page )
 	HPDF_Page_SetRGBFill( page, 0, 0, 0 )
@@ -81,7 +80,8 @@ function main( integer argc, sequence argv )
 	
 	atom ypos
 	
-	fname = argv[1] & ".pdf"
+	fname = argv[1]
+	fname &= ".pdf"
 	
 	pdf = HPDF_New( error_handler_cb, NULL )
 	if not pdf then
