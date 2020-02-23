@@ -5,8 +5,8 @@ CMake is a family of tools designed to build, test and
 package software and it is cross-platform and open
 source. CMake and can obtained from http://www.cmake.org.
 
-0 Setup CMake
--------------
+Setup CMake
+-----------
 CMake is available in most of Linux repositories and can 
 be therefore easily installed. In Cygwin just use the 
 usual method with setup.exe to get the latest version of CMake.
@@ -15,7 +15,7 @@ download the appropriate binary packge. Make sure that the
 bin directory of the extracted CMake package is in the 
 PATH environment variable. Check in the CLI with
 
-cmake --version
+    cmake --version
 
 that CMake can be found. There is also a graphical interface
 to CMake available which can be run with ccmake (Linux, Mac OS X)
@@ -29,10 +29,10 @@ in order to prevent problems with stale CMake cache files.
 X Specific instructions for Linux and Mac OS X
 ==============================================
 Create a directory at the same level as the libharu source directory,
-e.g. "mkdir libharu_build". Cd into this directory.
+e.g. `mkdir libharu_build`. Cd into this directory.
 Than run cmake with the command
 
-cmake ../libharu
+    cmake ../libharu
 
 CMake will configure the build and create the appropriate makefiles.
 Run "make" to create the library and the examples. There are some
@@ -41,37 +41,38 @@ options available which are described below.
 X Specific instructions for Windows
 ===================================
 Create a directory at the same level as the libharu source directory,
-e.g. "mkdir libharu_build". Cd into this directory.
+e.g. `mkdir libharu_build`. Cd into this directory.
 Since there are more compiler toolsets available for Windows than
 the standard gcc compiler, you need to tell cmake which makefile
 generator to use
 
-cmake -G "Makefile Generator" ..\libharu
+    cmake -G "Makefile Generator" ..\libharu
 
 where Make Generator is one of the following (most important listed)
 
-  Borland Makefiles           = Generates Borland makefiles.
-  MSYS Makefiles              = Generates MSYS makefiles.
-  MinGW Makefiles             = Generates a make file for use with
-                                mingw32-make.
-  NMake Makefiles             = Generates NMake makefiles.
-  Visual Studio 6             = Generates Visual Studio 6 project files.
-  Visual Studio 9 2008        = Generates Visual Studio 9 2008 project files.
+| Name                 | Description                                      |
+|----------------------|--------------------------------------------------|
+| Borland Makefiles    | Generates Borland makefiles.                     |
+| MSYS Makefiles       | Generates MSYS makefiles.                        |
+| MinGW Makefiles      | Generates a make file for use with mingw32-make. |
+| NMake Makefiles      | Generates NMake makefiles.                       |
+| Visual Studio 6      | Generates Visual Studio 6 project files.         |
+| Visual Studio 9 2008 | Generates Visual Studio 9 2008 project files.    |
 
 You get a complete list of all available generators for your platfrom
-with "cmake --help". I'll go into details for one specific compiler toolset.
+with `cmake --help`. I'll go into details for one specific compiler toolset.
 The other generators work similar.
 
 Using CMake to produce Visual C++ 2008 Makfiles
 -----------------------------------------------
 First you need to have the command line interface setup correctly. Start
-cmd.exe and run "%VS90COMNTOOLS%vsvars32.bat". This will set up the
+cmd.exe and run `%VS90COMNTOOLS%vsvars32.bat`. This will set up the
 command line tools of Visual C++ 2008. Cd into the created build
 directory and run
 
-cmake -G "NMake Makefiles" ..\libharu
+    cmake -G "NMake Makefiles" ..\libharu
 
-After the configuration and creation of the makefile run "nmake" to create
+After the configuration and creation of the makefile run `nmake` to create
 the libraries and demonstrations. By default a shared library will be 
 created therefore you need to copy the haru.dll from the src directory
 in the demo directory in order for the demonstrations to run correctly.
@@ -79,14 +80,14 @@ in the demo directory in order for the demonstrations to run correctly.
 X Useful CMake options
 ======================
 There are some options available where you can influence the configuration
-stage. These options must be given at the command line with the -D flag, e.g.
+stage. These options must be given at the command line with the `-D` flag, e.g.
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug ..\libharu
+    cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug ..\libharu
 
-  CMAKE_BUILD_TYPE=Debug|Release - debug or release build
-  BUILD_SHARED_LIBS=ON|OFF - shared or static build
-  CMAKE_COLOR_MAKEFILE=ON|OFF - color output
-  CMAKE_VERBOSE_MAKEFILE=ON|OFF - verbose makefile output
+  * `CMAKE_BUILD_TYPE=Debug|Release` - debug or release build
+  * `BUILD_SHARED_LIBS=ON|OFF` - shared or static build
+  * `CMAKE_COLOR_MAKEFILE=ON|OFF` - color output
+  * `CMAKE_VERBOSE_MAKEFILE=ON|OFF` - verbose makefile output
   
 More options can be found here: http://www.cmake.org/Wiki/CMake_Useful_Variables
 
@@ -98,9 +99,7 @@ there are simply no standard locations for libraries) or if you want to
 use a library at a non-standard location. You can help CMake to find
 libraries via two environment variables, e.g. for Windows:
 
-set CMAKE_INCLUDE_PATH=path_to_zlib_headers
-set CMAKE_LIBRARY_PATH=path_to_zlib
+    set CMAKE_INCLUDE_PATH=path_to_zlib_headers
+    set CMAKE_LIBRARY_PATH=path_to_zlib
 
 and then CMake will be able to find zlib.
-  
-  

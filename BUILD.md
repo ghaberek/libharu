@@ -1,5 +1,8 @@
+# Build instructions for Euphoria
 
-zlib
+## Windows
+
+### zlib
 
     git clone https://github.com/winlibs/zlib winlibs/zlib
     mkdir winlibs\zlib\build
@@ -9,7 +12,7 @@ zlib
     copy libzlib.dll C:\Euphoria\bin
     cd ..\..\..
 
-libpng
+### libpng
 
     git clone https://github.com/winlibs/libpng winlibs/libpng
     mkdir winlibs\libpng\build
@@ -19,7 +22,7 @@ libpng
     copy libpng16.dll C:\Euphoria\bin
     cd ..\..\..
 
-libharu
+### libharu
 
     git clone https://github.com/ghaberek/libharu ghaberek\libharu
     mkdir ghaberek\libharu\build
@@ -27,5 +30,6 @@ libharu
     cmake -G "MinGW Makefiles" -DZLIB_INCLUDE_DIR=../../../winlibs/zlib;../../../winlibs/zlib/build -DPNG_PNG_INCLUDE_DIR=../../../winlibs/libpng;../../../winlibs/libpng/build ..
     mingw32-make -j2
     copy src\libhpdf.dll C:\Euphoria\bin
+    copy if\euphoria\*.e C:\Euphoria\include
     cd ..\..\..
 

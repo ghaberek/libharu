@@ -1272,8 +1272,15 @@ public function HPDF_LoadRawImageFromFile( HPDF_Doc pdf, sequence filename, inte
 	return c_func( xHPDF_LoadRawImageFromFile, {pdf,_(filename),width,height,color_space} )
 end function
 
-public function HPDF_LoadRawImageFromMem( HPDF_Doc pdf, atom buffer, integer width, integer height, HPDF_ColorSpace color_space, integer bits_per_component )
-	return c_func( xHPDF_LoadRawImageFromMem, {buffer,width,height,color_space,bits_per_component} )
+public function HPDF_LoadRawImageFromMem( HPDF_Doc pdf, object buffer, integer width, integer height, HPDF_ColorSpace color_space, integer bits_per_component )
+	
+	if sequence( buffer ) then
+		atom pbuffer = allocate_data( length(buffer), TRUE )
+		poke( pbuffer, buffer )
+		buffer = pbuffer
+	end if
+	
+	return c_func( xHPDF_LoadRawImageFromMem, {pdf,buffer,width,height,color_space,bits_per_component} )
 end function
 
 public function HPDF_Image_AddSMask( HPDF_Image image, HPDF_Image smask )

@@ -42,3 +42,7 @@ CPackSourceConfig.cmake
 cmake_install.cmake
 depcomp
 ex.err
+dist/bin
+dist/demo
+dist/include
+dist/*.zip
